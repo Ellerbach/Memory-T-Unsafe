@@ -1,12 +1,12 @@
 # Playing with Memory<T> and usage
 
-With .NET Core 2.1 the type Mamory<T> appeared. The question is: how to use it and what can be the advantage?
+With .NET Core 2.1 the type Memory<T> appeared. The question is: how to use it and what can be the advantage?
 
 ## The Memory<T> type
 
-You can find more information on this new type in the .NET Core docs [here](https://github.com/dotnet/corefxlab/blob/master/docs/specs/memory.md). What will follow is more about showing how to use it, the advantages and what to take care of when using them. In short, Memory provide a pointer on an array of data. Directly on the raw storage.
+You can find more information on this new class in the .NET Core docs [here](https://github.com/dotnet/corefxlab/blob/master/docs/specs/memory.md). What will follow is more about showing how to use it, the advantages and what to take care of when using Memory. In short, Memory provide a pointer on an array of data. Directly on the raw storage.
 
-In the example, I'm using a ```Memory<byte>``` type. So we will point on array of bytes.
+In the example, I'm using a ```Memory<byte>``` type. So we will point on array of bytes. The application a simple console application.
 
 ## Creating the Memory<T> type
 
@@ -43,6 +43,26 @@ memory = new Memory<byte>(twobytes, 1, 1);
 ```
 
 ## Modifying data in a Memory class and on the original bytes
+
+In order to display data from the Memory byte array and from the byte array, we're creating 2 simple functions to display the content of the arrays:
+
+```C#
+static private void DisplayData(Memory<byte> memory)
+{
+    Console.Write($"Memory: ");
+    for (int i = 0; i < memory.Length; i++)
+        Console.Write($"{memory.Span[i]} ");
+    Console.WriteLine();
+}
+
+static private void DisplayBytes(byte[] memory)
+{
+    Console.Write($"Bytes: ");
+    for (int i = 0; i < memory.Length; i++)
+        Console.Write($"{memory[i]} ");
+    Console.WriteLine();
+}
+```
 
 Now let's play a bit with the data. First, let's change the data from the Memory object and see the result on the initial data.
 
@@ -98,25 +118,7 @@ Memory: 5 3
 Bytes: 9 3
 ```
 
-So changing the original array byte is changing the data in the Memory object. In fact, all this is totally normal. Memory objects are just pointers on the core data of your core object. In order to display data from the Memory byte array and from the byte array, we're creating 2 simple functions to display the content of the arrays:
-
-```C#
-static private void DisplayData(Memory<byte> memory)
-{
-    Console.Write($"Memory: ");
-    for (int i = 0; i < memory.Length; i++)
-        Console.Write($"{memory.Span[i]} ");
-    Console.WriteLine();
-}
-
-static private void DisplayBytes(byte[] memory)
-{
-    Console.Write($"Bytes: ");
-    for (int i = 0; i < memory.Length; i++)
-        Console.Write($"{memory[i]} ");
-    Console.WriteLine();
-}
-```
+So changing the original array byte is changing the data in the Memory object. In fact, all this is totally normal. Memory objects are just pointers on the core data of your core object. 
 
 Now, we will initialize the Memory class with a partial part of the initial array, then release the data from the array and see the result:
 
